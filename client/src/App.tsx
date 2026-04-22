@@ -40,10 +40,10 @@ function App() {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Enter todo"
-            class="input-todo"
+            className="input-todo"
         />
 
-        <button onClick={addTodo}>Add</button>
+        <button onClick={addTodo}  className="button-todo">Add</button>
 
         <ul>
           {todos.map(todo => (
