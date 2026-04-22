@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-
+import './App.css'
 
 function App() {
   const [todos, setTodos] = useState([])
@@ -40,7 +40,7 @@ function App() {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Enter todo"
-            className={"input-todo"}
+            class="input-todo"
         />
 
         <button onClick={addTodo}>Add</button>
