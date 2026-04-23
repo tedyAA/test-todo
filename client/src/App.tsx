@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import './App.css'
 import TodoItem from './components/TodoItem'
+import Calendar from 'react-calendar'
+import 'react-calendar/dist/Calendar.css'
 
 function App() {
     const [todos, setTodos] = useState([])
@@ -12,15 +14,20 @@ function App() {
     const [color, setColor] = useState('#3b82f6')
     const [date, setDate] = useState('')
 
+    const [selectedDate, setSelectedDate] = useState(new Date())
+
     const fetchTodos = async () => {
         const res = await axios.get('http://localhost:5000/todos')
         setTodos(res.data)
-        console.log(res.data)
     }
 
     useEffect(() => {
         fetchTodos()
     }, [])
+
+    const formatDate = (date) => {
+        return date.toISOString().split('T')[0]
+    }
 
     const addTodo = async () => {
         if (!name.trim()) return
@@ -57,63 +64,90 @@ function App() {
         fetchTodos()
     }
 
+    const filteredTodos = todos.filter(
+        todo => todo.date === formatDate(selectedDate)
+    )
+
     return (
-        <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto' }}>
-            <h1>Todo App</h1>
+        <div
+            className="app-layout"
+            style={{
+                display: 'flex',
+                gap: '20px',
+                padding: '20px',
+                alignItems: 'flex-start'
+            }}
+        >
 
-            {/* Inputs */}
-            <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Todo name"
-                className="input-todo"
-            />
+            {/* LEFT SIDE - CALENDAR */}
+            <div style={{ width: '300px' }}>
+                <h2>Calendar</h2>
 
-            <input
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Description"
-                className="input-todo"
-            />
-
-            <select
-                value={priority}
-                onChange={(e) => setPriority(e.target.value)}
-                className="input-todo"
-            >
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-            </select>
-
-            <input
-                type="color"
-                value={color}
-                onChange={(e) => setColor(e.target.value)}
-                className="input-todo"
-                placeholder={"Pick a color"}
-            />
-
-            <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="input-todo"
-            />
-
-            <button onClick={addTodo} className="button-todo">
-                Add
-            </button>
-
-            {todos.map(todo => (
-                <TodoItem
-                    key={todo.id}
-                    todo={todo}
-                    onDelete={deleteTodo}
-                    onToggle={toggleTodo}
-                    onEdit={editTodo}
+                <Calendar
+                    onChange={setSelectedDate}
+                    value={selectedDate}
                 />
-            ))}
+            </div>
+
+            {/* RIGHT SIDE - TODO APP */}
+            <div style={{flex: 1}}>
+                <h1>Todo App</h1>
+
+                {/* Inputs */}
+                <input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Todo name"
+                    className="input-todo"
+                />
+
+                <input
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Description"
+                    className="input-todo"
+                />
+
+                <select
+                    value={priority}
+                    onChange={(e) => setPriority(e.target.value)}
+                    className="input-todo"
+                >
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+
+                <input
+                    type="color"
+                    value={color}
+                    onChange={(e) => setColor(e.target.value)}
+                    className="input-todo"
+                />
+
+                <input
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className="input-todo"
+                />
+
+                <button onClick={addTodo} className="button-todo">
+                    Add
+                </button>
+
+                <div className="todo-grid">
+                    {filteredTodos.map(todo => (
+                        <TodoItem
+                            key={todo.id}
+                            todo={todo}
+                            onDelete={deleteTodo}
+                            onToggle={toggleTodo}
+                            onEdit={editTodo}
+                        />
+                    ))}
+                </div>
+            </div>
         </div>
     )
 }
