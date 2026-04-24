@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import './App.css'
-import TodoItem from './components/TodoItem'
+import TodoItem from './components/TodoItem.jsx'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 
