@@ -26,9 +26,10 @@ function App() {
     }, [])
 
     const formatDate = (date) => {
-        return date.toISOString().split('T')[0]
+        const offset = date.getTimezoneOffset()
+        const localDate = new Date(date.getTime() - offset * 60 * 1000)
+        return localDate.toISOString().split('T')[0]
     }
-
     const addTodo = async () => {
         if (!name.trim()) return
 
